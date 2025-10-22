@@ -121,6 +121,15 @@
 			copyToClipboard(outputEmailContainer.innerText)
 		})
 
+		inputExcludeEmailContainer.addEventListener("blur", function() {
+			saveExcludedEmails()
+		})
+
+		window.addEventListener("load", function() {
+			if(window.localStorage) {
+				 inputExcludeEmailContainer.value = window.localStorage.getItem("excludeEmails") ? window.localStorage.getItem("excludeEmails") : ""
+			}
+		})
 
 
 		function CleanEmail () {
@@ -135,9 +144,6 @@
 			} else {
 				finalResult = ["Nothing ", "to ", "copy ", " (-_-)"]
 			}
-
-			// const finalResult = result ? new Set(result) : ["Nothing ", "to ", "copy ", " (-_-)"]
-
 			
 			outputEmailContainer.innerText = Array.from(finalResult).join("\n")
 		}
@@ -162,6 +168,14 @@
 		  } catch (err) {
 		    alert('Failed to copy text:', err);
 		  }
+		}
+
+		function saveExcludedEmails () {
+			if (window.localStorage) {
+				window.localStorage.setItem("excludeEmails", inputExcludeEmailContainer.value)
+				console.log(window.localStorage.getItem("excludeEmails"))
+			}
+				console.log(window.localStorage.getItem("excludeEmails"))
 		}
 	</script>
 </body>
