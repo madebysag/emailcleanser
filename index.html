@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Email Cleanser | Half Verifier</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		div#alert {
+			display: none;
+			position: fixed;
+			top: 3rem;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			border: 1px dotted black;
+			padding: 10px 20px;
+			animation: alert .2s ease-in;
+			background: white;
+		}
+
+		@keyframes alert {
+			0% {transform: translate(-50%, -30%);}
+			100% {transform: translate(-50%, -50%);}
+		}
+
+		.container {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-direction: column;
+			padding: 5rem;
+		}
+
+		textarea, textarea#email {
+			margin: 2rem 0 1rem;
+			width: 70vw;
+			height: 50vh;
+			font: 600 1.2rem serif;
+			padding: 10px;
+			border-radius: 10px;
+			border: grey 2px solid;
+		}
+
+		textarea#excludeEmails {
+			margin: 0.8rem 0 2rem;
+			height: 20vh;
+		}
+
+		hr {
+			border: grey 2px dashed;
+			width: 100%;
+			margin: 2rem 0;
+		}
+
+		button, button#cleanEmail {
+			padding: 10px 20px;
+			margin: 0.3rem 1rem;
+			border: none;
+			color: white;
+			font: 600 1rem sans-serif;
+			background: black;
+			border-radius: 5px;
+			cursor: pointer;
+			border: black 2px solid;
+		}
+		
+		button#copyBtn,  button#clear {
+			background: transparent;
+			color: black;
+		}
+
+		div#cleanedEmail {
+			padding: 2rem 0 5rem;
+			text-align: center;
+		}
+		.btnContainer {
+			text-align: center;
+		}
+
+
+
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div id="alert">Emails Copied &hearts;&heartsuit;</div>
+		<h2>Email Cleanser | Half Verifier</h2>
+		<textarea name="email" id="email" placeholder="Enter or Paste Emails here..."></textarea>
+		
+		<hr />
+		<label for="excludeEmails"> Enter Address you do not want in your result:</label>
+		<textarea name="excludeEmails" id="excludeEmails" height="5rem" placeholder="Enter or Paste Emails to be excluded here..."></textarea>
+
+		<div class="btnContainer">
+			<button id="clear" onclick="ClearField()">Clear Text Field</button>
+			<button id="cleanEmail" onclick="CleanEmail()">Cleanse | Verify</button>
+		</div>
+		<div id="cleanedEmail"></div>
+		<button id="copyBtn" >Copy Cleansed Emails</button>
+	</div>
+
+
+	<script>
+		const cleanBtn = document.getElementById("cleanEmail")
+		const copyBtn = document.getElementById("copyBtn")
+		const copyAlertContainer = document.getElementById("alert")
+		const inputEmailContainer = document.getElementById("email")
+		const outputEmailContainer = document.getElementById("cleanedEmail")
+		
+		const inputExcludeEmailContainer = document.getElementById("excludeEmails")
+
+		const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/gm
+
+		copyBtn.addEventListener("click", function () {
+			copyToClipboard(outputEmailContainer.innerText)
+		})
+
+
+
+		function CleanEmail () {
+			const emails = inputEmailContainer.value;
+			const excludeEmails = inputExcludeEmailContainer.value ? inputExcludeEmailContainer.value.match(pattern) : [];
+
+			const result = emails.match(pattern)
+			console.log(excludeEmails)
+			let finalResult;
+			if (result) {
+				finalResult = result.filter(value => !excludeEmails.includes(value))
+			} else {
+				finalResult = ["Nothing ", "to ", "copy ", " (-_-)"]
+			}
+
+			// const finalResult = result ? new Set(result) : ["Nothing ", "to ", "copy ", " (-_-)"]
+
+			
+			outputEmailContainer.innerText = Array.from(finalResult).join("\n")
+		}
+
+		function ClearField () {
+
+			inputEmailContainer.value = ""
+		}
+
+		function copyAlert () {
+			copyAlertContainer.style.display = "block"
+
+			setTimeout(function() {
+			copyAlertContainer.style.display = "none"
+			}, 2000);
+		}
+
+		async function copyToClipboard(textToCopy) {
+		  try {
+		    await navigator.clipboard.writeText(textToCopy);
+		    copyAlert();
+		  } catch (err) {
+		    alert('Failed to copy text:', err);
+		  }
+		}
+	</script>
+</body>
+</html>
