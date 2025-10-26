@@ -137,10 +137,9 @@
 			const excludeEmails = inputExcludeEmailContainer.value ? inputExcludeEmailContainer.value.match(pattern) : [];
 
 			const result = emails.match(pattern)
-			console.log(excludeEmails)
 			let finalResult;
 			if (result) {
-				finalResult = result.filter(value => !excludeEmails.includes(value))
+				finalResult = new Set(result.filter(value => !excludeEmails.includes(value)))
 			} else {
 				finalResult = ["Nothing ", "to ", "copy ", " (-_-)"]
 			}
@@ -173,9 +172,7 @@
 		function saveExcludedEmails () {
 			if (window.localStorage) {
 				window.localStorage.setItem("excludeEmails", inputExcludeEmailContainer.value)
-				console.log(window.localStorage.getItem("excludeEmails"))
 			}
-				console.log(window.localStorage.getItem("excludeEmails"))
 		}
 	</script>
 </body>
